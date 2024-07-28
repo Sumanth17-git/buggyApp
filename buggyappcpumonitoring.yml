@@ -1,0 +1,36 @@
+---
+apiVersion: "apps/v1"
+kind: "Deployment"
+metadata:
+  name: "buggycpu"
+  namespace: "default"
+  labels:
+    app: "buggycpu"
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: "buggycpu"
+  template:
+    metadata:
+      labels:
+        app: "buggycpu"
+    spec:
+      containers:
+      - name: buggycpu
+        image: sumanth17121988/buggyapp:v1
+        resources:
+            limits:
+              cpu: 1
+              memory: 1024Mi
+             requests:
+              cpu: 500m
+              memory: 512Mi
+      - env:
+         - name: JAVA_TOOL_OPTIONS
+            value: "-Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=3001 
+                        -Dcom.sun.management.jmxremote.rmi.port=3001
+                        -Dcom.sun.management.jmxremote.authenticate=false 
+                        -Dcom.sun.management.jmxremote.ssl=false 
+                        -Dcom.sun.management.jmxremote.local.only=false 
+                        -Djava.rmi.server.hostname=35.238.6.225"
