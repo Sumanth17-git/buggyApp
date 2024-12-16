@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: buggyapp-memory
+  namespace: default
+  labels:
+    app: buggyapp-memory
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: buggyapp-memory
+  template:
+    metadata:
+      labels:
+        app: buggyapp-memory
+    spec:
+      initContainers:
+      - name: init-volume
+        image: busybox
+        command: ["sh", "-c", "mkdir -p /heapdumps && chmod 777 /heapdumps"]
+        volumeMounts:
+        - mountPath: /heapdumps
+          name: heapdumps-volume
+      containers:
+      - name: buggyapp-memory
+        image: sumanth17121988/memoryissue:1
+        env:
+        - name: JAVA_OPTS
+          value: "-Xmx512m -Xms512m -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/heapdumps -XX:+ExitOnOutOfMemoryError"
+        volumeMounts:
+        - mountPath: /heapdumps
+          name: heapdumps-volume
+        resources:
+          limits:
+            memory: "1024Mi"
+            cpu: "1"
+          requests:
+            memory: "512Mi"
+            cpu: "500m"
+      volumes:
+      - name: heapdumps-volume
+        hostPath:
+          path: /home/dhrangdhariaritesh/heapdumps
+          type: DirectoryOrCreate
