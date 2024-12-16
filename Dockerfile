@@ -1,4 +1,12 @@
-FROM openjdk:17-jdk-slim
+FROM openjdk:17-jdk
+
+# Set the working directory
+WORKDIR /usr/app
+
+# Copy application files to the container
 COPY ./ ./
-ENTRYPOINT ["java","-jar","buggyApp.jar"]
-CMD ["PROBLEM_CPU"]
+
+
+# Environment variable for Java options
+ENV JAVA_OPTS=""
+ENTRYPOINT exec java ${JAVA_OPTS} -jar buggyApp.jar PROBLEM_OOM
