@@ -7,7 +7,7 @@ metadata:
   labels:
     app: "buggycpu"
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: "buggycpu"
@@ -20,14 +20,14 @@ spec:
       - name: buggycpu
         image: sumanth17121988/buggyapp:v1
         resources:
-            limits:
-              cpu: 1
-              memory: 1024Mi
-             requests:
-              cpu: 500m
-              memory: 512Mi
+          limits:
+            cpu: "1"
+            memory: "1024Mi"
+          requests:
+            cpu: "500m"
+            memory: "512Mi"
 ---
-apiVersion: "autoscaling/v2beta1"
+apiVersion: "autoscaling/v2"
 kind: "HorizontalPodAutoscaler"
 metadata:
   name: "buggycpu-hpa"
@@ -45,4 +45,6 @@ spec:
   - type: "Resource"
     resource:
       name: "cpu"
-      targetAverageUtilization: 80
+      target:
+        type: "Utilization"
+        averageUtilization: 80
