@@ -9,4 +9,5 @@ COPY ./ ./
 
 # Environment variable for Java options
 ENV JAVA_OPTS=""
-ENTRYPOINT exec java ${JAVA_OPTS} -jar buggyApp.jar PROBLEM_OOM
+ENV PROBLEM=""
+ENTRYPOINT exec java ${JAVA_OPTS} -jar buggyApp.jar ${PROBLEM}
