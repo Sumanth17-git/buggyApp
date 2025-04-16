@@ -4,6 +4,8 @@ docker build -t sumanth17121988/buggyapp:1 .
 **1. OutOfMemoryError: Java heap space**
 ```bash
 docker run -d -e "JAVA_OPTS=-Xms512m -Xmx2g -XX:+UseG1GC -XX:MaxGCPauseMillis=200" -e PROBLEM="PROBLEM_OOM" sumanth17121988/buggyapp:1
+docker run -d -m 512m --cpus="1.0" -e PROBLEM="PROBLEM_OOM" sumanth17121988/buggyapp:1
+
 ```
 **2. CPU spike**
 ```bash
